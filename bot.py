@@ -49,6 +49,50 @@ def echo(update: Update, context: CallbackContext) -> None:
     update.message.reply_text(update.message.text)
 
 
+def detect_intent_texts(project_id, session_id, texts, language_code):
+    """Returns the result of detect intent with texts as inputs.
+    Using the same `session_id` between requests allows continuation
+    of the conversation."""
+    from google.cloud import dialogflow
+
+    session_client = dialogflow.SessionsClient()
+
+    session = session_client.session_path(project_id, session_id)
+
+    for text in texts:
+        text_input = dialogflow.TextInput(text=text, language_code=language_code)
+
+        query_input = dialogflow.QueryInput(text=text_input)
+
+        response = session_client.detect_intent(
+            request={"session": session, "query_input": query_input}
+        )
+
+        # print("=" * 20)
+        # print("Query text: {}".format(response.query_result.query_text))
+        # print(
+        #     "Detected intent: {} (confidence: {})\n".format(
+        #         response.query_result.intent.display_name,
+        #         response.query_result.intent_detection_confidence,
+        #     )
+        # )
+        # print("Fulfillment text: {}\n".format(response.query_result.fulfillment_text))
+        return "{}\n".format(response.query_result.fulfillment_text)
+
+def get_dialog_flow_answer(update: Update, context: CallbackContext) -> None:
+    """Get answer via Google Dialog Flow"""
+    params = {
+        'language_code': 'ru',
+        'project_id': 'verbs-game-bot',
+        'session_id': update.message.from_user.id,
+        'texts': [update.message.text],
+    }
+    logger.info(params)
+    answer = detect_intent_texts(**params)
+    logger.info(answer)
+    update.message.reply_text(answer)
+
+
 def main() -> None:
     """Start the bot."""
     env = Env()
@@ -66,7 +110,7 @@ def main() -> None:
     dispatcher.add_handler(CommandHandler("help", help_command))
 
     # on non command i.e message - echo the message on Telegram
-    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
+    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, get_dialog_flow_answer))
 
     # Start the Bot
     updater.start_polling()
