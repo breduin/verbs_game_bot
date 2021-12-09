@@ -33,7 +33,7 @@ def detect_intent_texts(project_id, session_id, texts, language_code):
 
         return "{}\n".format(response.query_result.fulfillment_text)
 
-def get_dialog_flow_answer(update, context) -> None:
+def get_dialog_flow_answer(event, vk_session_api) -> None:
     """Get answer via Google Dialog Flow"""
     env = Env()
     env.read_env()
@@ -43,20 +43,15 @@ def get_dialog_flow_answer(update, context) -> None:
     params = {
         'language_code': GOOGLE_CLOUD_PROJECT_LANGUAGE_CODE,
         'project_id': GOOGLE_CLOUD_PROJECT_ID,
-        'session_id': update.message.from_user.id,
-        'texts': [update.message.text],
+        'session_id': event.user_id,
+        'texts': [event.text],
     }
-    logger.info(params)
     answer = detect_intent_texts(**params)
-    logger.info(answer)
-    update.message.reply_text(answer)
 
-
-def echo(event, vk_session_api):
     vk_session_api.messages.send(
-        user_id=event.user_id,
-        message=event.text,
-        random_id=random.randint(1,1000)
+    user_id=event.user_id,
+    message=answer,
+    random_id=random.randint(1,1000)
     )
 
 
@@ -73,7 +68,7 @@ def main() -> None:
     longpoll = VkLongPoll(vk_session)
     for event in longpoll.listen():
         if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-            echo(event, vk_session_api)
+            get_dialog_flow_answer(event, vk_session_api)
 
 
 if __name__ == '__main__':
