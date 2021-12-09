@@ -30,8 +30,11 @@ def detect_intent_texts(project_id, session_id, texts, language_code):
         response = session_client.detect_intent(
             request={"session": session, "query_input": query_input}
         )
+        if response.query_result.intent.is_fallback:
+            return None
+        else:
+            return "{}\n".format(response.query_result.fulfillment_text)
 
-        return "{}\n".format(response.query_result.fulfillment_text)
 
 def get_dialog_flow_answer(event, vk_session_api) -> None:
     """Get answer via Google Dialog Flow"""
@@ -47,12 +50,13 @@ def get_dialog_flow_answer(event, vk_session_api) -> None:
         'texts': [event.text],
     }
     answer = detect_intent_texts(**params)
-
-    vk_session_api.messages.send(
-    user_id=event.user_id,
-    message=answer,
-    random_id=random.randint(1,1000)
-    )
+    
+    if answer:
+        vk_session_api.messages.send(
+        user_id=event.user_id,
+        message=answer,
+        random_id=random.randint(1,1000)
+        )
 
 
 def main() -> None:
