@@ -81,9 +81,14 @@ def detect_intent_texts(project_id, session_id, texts, language_code):
 
 def get_dialog_flow_answer(update: Update, context: CallbackContext) -> None:
     """Get answer via Google Dialog Flow"""
+    env = Env()
+    env.read_env()
+    GOOGLE_CLOUD_PROJECT_ID = env.str('GOOGLE_CLOUD_PROJECT_ID')
+    GOOGLE_CLOUD_PROJECT_LANGUAGE_CODE = env.str('GOOGLE_CLOUD_PROJECT_LANGUAGE_CODE')
+    
     params = {
-        'language_code': 'ru',
-        'project_id': 'verbs-game-bot',
+        'language_code': GOOGLE_CLOUD_PROJECT_LANGUAGE_CODE,
+        'project_id': GOOGLE_CLOUD_PROJECT_ID,
         'session_id': update.message.from_user.id,
         'texts': [update.message.text],
     }
