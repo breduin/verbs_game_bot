@@ -69,6 +69,7 @@ def main() -> None:
             logger.info('VK bot stoppped.')
             exit()
         except Exception as e:
+            logger.error('VK-bot: error.')
             logger.exception(e)
             raise e
 

@@ -37,7 +37,7 @@ def get_answer(update: Update, context: CallbackContext) -> None:
 
 def handle_tg_error(update: Update, context: CallbackContext) -> None:
     """Send message to logger bot"""
-    logger.error(msg="Исключение при обработке сообщения:",
+    logger.error(msg="TG-bot: Исключение при обработке сообщения:",
                  exc_info=context.error
                  )
 
