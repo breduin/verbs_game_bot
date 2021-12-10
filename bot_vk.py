@@ -30,7 +30,7 @@ def main() -> None:
                                      text=log_entry
                                      )
 
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
     bot_handler = BotHandler()
     bot_formatter = logging.Formatter('%(message)s')
     bot_handler.setFormatter(bot_formatter)
