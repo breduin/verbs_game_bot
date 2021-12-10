@@ -5,10 +5,13 @@
 ## Примеры работы
 
 ### Telegram
+[Telegram-бот @verbs_game_support_bot](https://t.me/verbs_game_support_bot)
 
 ![Демонстрация работы Telegam бота](tg_bot.gif)
 
 ### Вконтакте
+
+[Страница с ботом](https://vk.com/im?media=&sel=-38040056&v=)
 
 ![Демонстрация работы бота Вконтакте](vk_bot.gif)
 
