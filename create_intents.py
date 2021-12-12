@@ -41,18 +41,19 @@ def main():
 
     env = Env()
     env.read_env()
-    GOOGLE_CLOUD_PROJECT_ID = env.str('GOOGLE_CLOUD_PROJECT_ID')
 
     with open("questions.json", "r") as questions_file:
         intents = json.load(questions_file)
 
     for intent_name, q_and_a in intents.items():
+
         questions = q_and_a['questions']
+        answers = [q_and_a['answer']]
 
-        answers = []
-        answers.append(q_and_a['answer'])
-
-        create_intent(GOOGLE_CLOUD_PROJECT_ID, intent_name, questions, answers)
+        create_intent(env.str('GOOGLE_CLOUD_PROJECT_ID'),
+                      intent_name, questions,
+                      answers
+                      )
 
 
 if __name__ == '__main__':
