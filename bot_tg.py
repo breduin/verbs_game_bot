@@ -23,11 +23,20 @@ def start(update: Update, context: CallbackContext) -> None:
 
 def get_answer(update: Update, context: CallbackContext) -> None:
     """Get answer from DialogFlow and return it to chat."""
+    env = Env()
+    env.read_env()
+    project_id = env.str('GOOGLE_CLOUD_PROJECT_ID')
+    language_code = env.str('GOOGLE_CLOUD_PROJECT_LANGUAGE_CODE')
+
     session_id = update.message.from_user.id
     text = update.message.text
 
-    answer = get_dialog_flow_answer(session_id, text)
-    update.message.reply_text(answer)
+    if answer := get_dialog_flow_answer(session_id,
+                                        text,
+                                        project_id,
+                                        language_code
+                                        ):
+        update.message.reply_text(answer)
 
 
 def handle_tg_error(update: Update, context: CallbackContext) -> None:

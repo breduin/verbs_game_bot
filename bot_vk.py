@@ -42,7 +42,12 @@ def main() -> None:
                     continue
                 message = event.text
                 try:
-                    answer = get_dialog_flow_answer(event.user_id, message)
+                    answer = get_dialog_flow_answer(
+                        event.user_id,
+                        message,
+                        env.str('GOOGLE_CLOUD_PROJECT_ID'),
+                        env.str('GOOGLE_CLOUD_PROJECT_LANGUAGE_CODE')
+                        )
                 except Exception as e:
                     logger.error('DialogFlow error.')
                     logger.exception(e)

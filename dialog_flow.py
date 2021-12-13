@@ -1,16 +1,9 @@
 """Prepare request to and get answer from Google DialogFlow."""
 from google.cloud import dialogflow
 
-from environs import Env
 
-
-def get_dialog_flow_answer(session_id, text):
+def get_dialog_flow_answer(session_id, text, project_id, language_code):
     """Get answer from Google Dialog Flow"""
-    env = Env()
-    env.read_env()
-    project_id = env.str('GOOGLE_CLOUD_PROJECT_ID')
-    language_code = env.str('GOOGLE_CLOUD_PROJECT_LANGUAGE_CODE')
-
     session_client = dialogflow.SessionsClient()
 
     session = session_client.session_path(project_id, session_id)
